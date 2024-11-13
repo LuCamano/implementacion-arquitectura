@@ -36,21 +36,24 @@ class DepartamentoController:
     
 class PagoController:
     @staticmethod
-    def create(**campos):
-        return PagoService.create(**campos)
+    def create(idGasto, numero, idEdificio, montoPagado):
+        return PagoService.create(idGasto, numero, idEdificio, montoPagado)
     
     @staticmethod
     def get_all():
         return PagoService.get_all()
     
     @staticmethod
-    def get_by_pk(idPago):
-        return PagoService.get_by_pk(idPago)
+    def get_by_pk(idGasto, numero, idEdificio):
+        return PagoService.get_by_pk(idGasto, numero, idEdificio)
     
     @staticmethod
-    def update(idGasto, numero, idEdificio, **campos):
-        return PagoService.update(idGasto, numero, idEdificio, **campos)
+    def get_by_gasto(idGasto):
+        return PagoService.get_by_gasto(idGasto)
     
+    @staticmethod
+    def get_by_departamento(numero, idEdificio):
+        return PagoService.get_by_departamento(numero, idEdificio)
 class GastoController:
     @staticmethod
     def create(**campos):
@@ -68,6 +71,9 @@ class GastoController:
     def update(idGasto, **campos):
         return GastoService.update(idGasto, **campos)
     
+    @staticmethod
+    def hacerPago(idGasto, numero, idEdificio, monto):
+        return GastoService.hacerPago(idGasto, numero, idEdificio, monto)
 class ServicioController:
     @staticmethod
     def create(**campos):

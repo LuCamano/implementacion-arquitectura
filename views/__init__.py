@@ -64,14 +64,7 @@ class DepartamentoView:
         return jsonify(departamento.serialize())
     
 class PagoView:
-    
-    @staticmethod
-    @pago_blueprint.route('/pago/create', methods=['POST'])
-    def create():
-        data = request.get_json()
-        pago = PagoController.create(**data)
-        return jsonify(pago.serialize())
-    
+
     @staticmethod
     @pago_blueprint.route('/pago/get_all', methods=['GET'])
     def get_all():
@@ -85,11 +78,16 @@ class PagoView:
         return jsonify(pago.serialize())
     
     @staticmethod
-    @pago_blueprint.route('/pago/update/<int:idPago>', methods=['PUT'])
-    def update(idPago):
-        data = request.get_json()
-        pago = PagoController.update(idPago, **data)
-        return jsonify(pago.serialize())
+    @pago_blueprint.route('/pago/get_by_gasto/<int:idGasto>', methods=['GET'])
+    def get_by_gasto(idGasto):
+        pagos = PagoController.get_by_gasto(idGasto)
+        return jsonify({'pagos':[pago.serialize() for pago in pagos]})
+    
+    @staticmethod
+    @pago_blueprint.route('/pago/get_by_departamento/<int:numero>/<int:idEdificio>', methods=['GET'])
+    def get_by_departamento(numero, idEdificio):
+        pagos = PagoController.get_by_departamento(numero, idEdificio)
+        return jsonify({'pagos':[pago.serialize() for pago in pagos]})
     
 class GastoView:
     
@@ -119,6 +117,12 @@ class GastoView:
         gasto = GastoController.update(idGasto, **data)
         return jsonify(gasto.serialize())
     
+    @staticmethod
+    @gasto_blueprint.route('/gasto/hacer_pago/<int:idGasto>', methods=['POST'])
+    def hacerPago(idGasto):
+        data = request.get_json()
+        pago, gasto = GastoController.hacerPago(idGasto, **data)
+        return jsonify({'pago':pago.serialize(), 'gasto':gasto.serialize()})
 class ServicioView:
     
     @staticmethod

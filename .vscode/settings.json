@@ -3,5 +3,8 @@
         "direccion",
         "jsonify",
         "nullable"
+    ],
+    "cSpell.words": [
+        "descripcion"
     ]
 }
