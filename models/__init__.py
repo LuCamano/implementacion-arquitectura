@@ -24,7 +24,7 @@ class Empleado(db.Model):
         return '<Empleado %r>' % self.run
 
 class Edificio(db.Model):
-    idEdificio = db.Column(db.Integer, primary_key=True)
+    idEdificio = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nombre = db.Column(db.String(30), nullable=False, unique=True)
     direccion = db.Column(db.String(35), nullable=False)
     numPisos = db.Column(db.Integer, nullable=False)
@@ -78,9 +78,12 @@ class Departamento(db.Model):
             'estado': self.estado, 
             'idEdificio': self.idEdificio
         }
+    
+    def __repr__(self):
+        return '<Departamento %r>' % self.numero
 
 class Solicitud(db.Model):
-    idSolicitud = db.Column(db.numeric, primary_key=True)
+    idSolicitud = db.Column(db.Integer, primary_key=True, autoincrement=True)
     tipo = db.Column(db.String(20), nullable=False)
     descripcion = db.Column(db.String(200), nullable=False)
     fecha = db.Column(db.Date, nullable=False)
@@ -96,8 +99,11 @@ class Solicitud(db.Model):
             'numero': self.numero, 
             'idEdificio': self.idEdificio
         }
+    
+    def __repr__(self):
+        return '<Solicitud %r>' % self.idSolicitud
 class Gasto(db.Model):
-    idGasto = db.Column(db.numeric, primary_key=True)
+    idGasto = db.Column(db.Integer, primary_key=True, autoincrement=True)
     valor = db.Column(db.Integer, nullable=False)
     tipo = db.Column(db.String(20), nullable=False)
     descripcion = db.Column(db.String(50), nullable=False)
@@ -113,11 +119,14 @@ class Gasto(db.Model):
             'estado': self.estado, 
             'fecha': self.fecha
         }
+    
+    def __repr__(self):
+        return '<Gasto %r>' % self.idGasto
 class Pago(db.Model):
-    idGasto = db.Column(db.numeric, db.ForeignKey('gasto.idGasto'), nullable=False)
-    numero = db.Column(db.Integer, db.ForeignKey('departamento.numero', nullable=False))
-    idEdificio = db.Column(db.Integer, db.ForeignKey('edificio.idEdificio', nullable=False))
-    montoPagado = db.Column(db.numeric, nullable=False)
+    idGasto = db.Column(db.Integer, db.ForeignKey('gasto.idGasto'), nullable=False)
+    numero = db.Column(db.Integer, db.ForeignKey('departamento.numero'), nullable=False)
+    idEdificio = db.Column(db.Integer, db.ForeignKey('edificio.idEdificio'), nullable=False)
+    montoPagado = db.Column(db.Integer, nullable=False)
     fechaPago = db.Column(db.Date, nullable=False)
 
     __table_args__ = (
@@ -132,10 +141,11 @@ class Pago(db.Model):
             'montoPagado': self.montoPagado, 
             'fechaPago': self.fechaPago
         }
+
 class Servicio(db.Model):
     nombre = db.Column(db.String(25), primary_key=True, nullable=False)
     descripcion = db.Column(db.String(50), nullable=False)
-    idGasto = db.Column(db.numeric, db.ForeignKey('gasto.idGasto'), nullable=False)
+    idGasto = db.Column(db.Integer, db.ForeignKey('gasto.idGasto'), nullable=False)
 
     def serialize(self):
         return {
