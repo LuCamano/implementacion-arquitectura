@@ -87,9 +87,6 @@ class Solicitud(db.Model):
     numero = db.Column(db.Integer, db.ForeignKey('departamento.numero'), nullable=False)
     idEdificio = db.Column(db.Integer, db.ForeignKey('edificio.idEdificio'), nullable=False)
     
-    __table_args__ = (
-        db.PrimaryKeyConstraint('idSolicitud', 'numero', 'idEdificio'),
-    )
     def serialize(self):
         return {
             'idSolicitud': self.idSolicitud, 
