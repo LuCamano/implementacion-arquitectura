@@ -78,3 +78,122 @@ class Departamento(db.Model):
             'estado': self.estado, 
             'idEdificio': self.idEdificio
         }
+
+class Solicitud(db.Model):
+    idSolicitud = db.Column(db.numeric, primary_key=True)
+    tipo = db.Column(db.String(20), nullable=False)
+    descripcion = db.Column(db.String(200), nullable=False)
+    fecha = db.Column(db.Date, nullable=False)
+    numero = db.Column(db.Integer, db.ForeignKey('departamento.numero'), nullable=False)
+    idEdificio = db.Column(db.Integer, db.ForeignKey('edificio.idEdificio'), nullable=False)
+    
+    def serialize(self):
+        return {
+            'idSolicitud': self.idSolicitud, 
+            'tipo': self.tipo, 
+            'descripcion': self.descripcion, 
+            'fecha': self.fecha, 
+            'numero': self.numero, 
+            'idEdificio': self.idEdificio
+        }
+class Gasto(db.Model):
+    idGasto = db.Column(db.numeric, primary_key=True)
+    valor = db.Column(db.Integer, nullable=False)
+    tipo = db.Column(db.String(20), nullable=False)
+    descripcion = db.Column(db.String(50), nullable=False)
+    estado = db.Column(db.String(15), nullable=False)
+    fecha = db.Column(db.Date, nullable=False)
+
+    def serialize(self):
+        return {
+            'idGasto': self.idGasto, 
+            'valor': self.valor, 
+            'tipo': self.tipo, 
+            'descripcion': self.descripcion, 
+            'estado': self.estado, 
+            'fecha': self.fecha
+        }
+class Pago(db.Model):
+    idGasto = db.Column(db.numeric, db.ForeignKey('gasto.idGasto'), nullable=False)
+    numero = db.Column(db.Integer, db.ForeignKey('departamento.numero', nullable=False))
+    idEdificio = db.Column(db.Integer, db.ForeignKey('edificio.idEdificio', nullable=False))
+    montoPagado = db.Column(db.numeric, nullable=False)
+    fechaPago = db.Column(db.Date, nullable=False)
+
+    __table_args__ = (
+        db.PrimaryKeyConstraint('idGasto', 'numero', 'idEdificio'),
+    )
+
+    def serialize(self):
+        return {
+            'idGasto': self.idGasto, 
+            'numero': self.numero, 
+            'idEdificio': self.idEdificio, 
+            'montoPagado': self.montoPagado, 
+            'fechaPago': self.fechaPago
+        }
+class Servicio(db.Model):
+    nombre = db.Column(db.String(25), primary_key=True, nullable=False)
+    descripcion = db.Column(db.String(50), nullable=False)
+    idGasto = db.Column(db.numeric, db.ForeignKey('gasto.idGasto'), nullable=False)
+
+    def serialize(self):
+        return {
+            'nombre': self.nombre, 
+            'descripcion': self.descripcion, 
+            'idGasto': self.idGasto
+        }
+class Persona(db.Model):
+    run = db.Column(db.String(12), primary_key=True, nullable=False)
+    nombre = db.Column(db.String(20), nullable=False)
+    contacto = db.Column(db.Integer, nullable=False)
+    conEmergencia = db.Column(db.Integer, nullable=False)
+
+    def serialize(self):
+        return {
+            'run': self.run, 
+            'nombre': self.nombre, 
+            'apellido': self.apellido, 
+            'contacto': self.contacto, 
+            'conEmergencia': self.conEmergencia
+        }
+
+class Residente(db.Model):
+    run = db.Column(db.String(12), db.ForeignKey('persona.run'), nullable=False)
+    numero = db.Column(db.Integer, db.ForeignKey('departamento.numero'), nullable=False)
+    idEdificio = db.Column(db.Integer, db.ForeignKey('edificio.idEdificio'), nullable=False)
+    inicio = db.Column(db.Date, nullable=False)
+    termino = db.Column(db.Date, nullable=True)
+
+    __table_args__ = (
+        db.PrimaryKeyConstraint('run', 'numero', 'idEdificio'),
+    )
+
+    def serialize(self):
+        return {
+            'run': self.run, 
+            'numero': self.numero, 
+            'idEdificio': self.idEdificio, 
+            'inicio': self.inicio, 
+            'termino': self.termino
+        }
+
+class Propietario(db.Model):
+    run = db.Column(db.String(12), db.ForeignKey('persona.run'), nullable=False)
+    numero = db.Column(db.Integer, db.ForeignKey('departamento.numero'), nullable=False)
+    idEdificio = db.Column(db.Integer, db.ForeignKey('edificio.idEdificio'), nullable=False)
+    inicio = db.Column(db.Date, nullable=False)
+    termino = db.Column(db.Date, nullable=True)
+
+    __table_args__ = (
+        db.PrimaryKeyConstraint('run', 'numero', 'idEdificio'),
+    )
+
+    def serialize(self):
+        return {
+            'run': self.run, 
+            'numero': self.numero, 
+            'idEdificio': self.idEdificio, 
+            'inicio': self.inicio, 
+            'termino': self.termino
+        }
