@@ -1,4 +1,5 @@
 from app import db
+from datetime import datetime
 
 class Empleado(db.Model):
     run = db.Column(db.String(12), primary_key=True)
@@ -119,9 +120,8 @@ class Gasto(db.Model):
 class Pago(db.Model):
     idPago = db.Column(db.Integer, primary_key=True, autoincrement=True)
     idGasto = db.Column(db.Integer, db.ForeignKey('gasto.idGasto'), nullable=False)
-    idDepartamento = db.Column(db.Integer, db.ForeignKey('departamento.idDepartamento'), nullable=False)
     montoPagado = db.Column(db.Integer, nullable=False)
-    fechaPago = db.Column(db.Date, nullable=False)
+    fechaPago = db.Column(db.Date, nullable=False, default=datetime.now())
 
     def serialize(self):
         return {
