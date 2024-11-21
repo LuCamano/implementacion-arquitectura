@@ -41,14 +41,11 @@ class Edificio(db.Model):
         return '<Edificio %r>' % self.idEdificio
     
 class EmpleadoEdificio(db.Model):
+    idEmpleadoEdificio = db.Column(db.Integer, primary_key=True, autoincrement=True)
     run = db.Column(db.String(12), db.ForeignKey('empleado.run'), nullable=False)
     idEdificio = db.Column(db.Integer, db.ForeignKey('edificio.idEdificio'), nullable=False)
     inicio = db.Column(db.Date, nullable=False)
     termino = db.Column(db.Date, nullable=True)
-
-    __table_args__ = (
-        db.PrimaryKeyConstraint('run', 'idEdificio'),
-    )
 
     def serialize(self):
         return {
@@ -62,14 +59,11 @@ class EmpleadoEdificio(db.Model):
         return '<EmpleadoEdificio %r>' % self.idEmpleadoEdificio
     
 class Departamento(db.Model):
+    idDepartamento = db.Column(db.Integer, primary_key=True, autoincrement=True)
     numero = db.Column(db.Integer, nullable=False)
     piso = db.Column(db.Integer, nullable=False)
     estado = db.Column(db.String(10), nullable=False)
     idEdificio = db.Column(db.Integer, db.ForeignKey('edificio.idEdificio'), nullable=False)
-
-    __table_args__ = (
-        db.PrimaryKeyConstraint('numero', 'idEdificio'),
-    )
 
     def serialize(self):
         return {
@@ -87,8 +81,7 @@ class Solicitud(db.Model):
     tipo = db.Column(db.String(20), nullable=False)
     descripcion = db.Column(db.String(200), nullable=False)
     fecha = db.Column(db.Date, nullable=False)
-    numero = db.Column(db.Integer, db.ForeignKey('departamento.numero'), nullable=False)
-    idEdificio = db.Column(db.Integer, db.ForeignKey('edificio.idEdificio'), nullable=False)
+    idDepartamento = db.Column(db.Integer, db.ForeignKey('departamento.idDepartamento'), nullable=False)
     
     def serialize(self):
         return {
@@ -109,6 +102,7 @@ class Gasto(db.Model):
     descripcion = db.Column(db.String(50), nullable=False)
     estado = db.Column(db.String(15), nullable=False)
     fecha = db.Column(db.Date, nullable=False)
+    idDepartamento = db.Column(db.Integer, db.ForeignKey('departamento.idDepartamento'), nullable=False)
 
     def serialize(self):
         return {
@@ -123,15 +117,11 @@ class Gasto(db.Model):
     def __repr__(self):
         return '<Gasto %r>' % self.idGasto
 class Pago(db.Model):
+    idPago = db.Column(db.Integer, primary_key=True, autoincrement=True)
     idGasto = db.Column(db.Integer, db.ForeignKey('gasto.idGasto'), nullable=False)
-    numero = db.Column(db.Integer, db.ForeignKey('departamento.numero'), nullable=False)
-    idEdificio = db.Column(db.Integer, db.ForeignKey('edificio.idEdificio'), nullable=False)
+    idDepartamento = db.Column(db.Integer, db.ForeignKey('departamento.idDepartamento'), nullable=False)
     montoPagado = db.Column(db.Integer, nullable=False)
     fechaPago = db.Column(db.Date, nullable=False)
-
-    __table_args__ = (
-        db.PrimaryKeyConstraint('idGasto', 'numero', 'idEdificio'),
-    )
 
     def serialize(self):
         return {
@@ -169,15 +159,11 @@ class Persona(db.Model):
         }
 
 class Residente(db.Model):
+    idResidente = db.Column(db.Integer, primary_key=True, autoincrement=True)
     run = db.Column(db.String(12), db.ForeignKey('persona.run'), nullable=False)
-    numero = db.Column(db.Integer, db.ForeignKey('departamento.numero'), nullable=False)
-    idEdificio = db.Column(db.Integer, db.ForeignKey('edificio.idEdificio'), nullable=False)
+    idDepartamento = db.Column(db.Integer, db.ForeignKey('departamento.idDepartamento'), nullable=False)
     inicio = db.Column(db.Date, nullable=False)
     termino = db.Column(db.Date, nullable=True)
-
-    __table_args__ = (
-        db.PrimaryKeyConstraint('run', 'numero', 'idEdificio'),
-    )
 
     def serialize(self):
         return {
@@ -189,15 +175,11 @@ class Residente(db.Model):
         }
 
 class Propietario(db.Model):
+    idPropietario = db.Column(db.Integer, primary_key=True, autoincrement=True)
     run = db.Column(db.String(12), db.ForeignKey('persona.run'), nullable=False)
-    numero = db.Column(db.Integer, db.ForeignKey('departamento.numero'), nullable=False)
-    idEdificio = db.Column(db.Integer, db.ForeignKey('edificio.idEdificio'), nullable=False)
+    idDepartamento = db.Column(db.Integer, db.ForeignKey('departamento.idDepartamento'), nullable=False)
     inicio = db.Column(db.Date, nullable=False)
     termino = db.Column(db.Date, nullable=True)
-
-    __table_args__ = (
-        db.PrimaryKeyConstraint('run', 'numero', 'idEdificio'),
-    )
 
     def serialize(self):
         return {
