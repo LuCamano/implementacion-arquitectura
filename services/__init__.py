@@ -24,7 +24,7 @@ class BaseService:
     
     @classmethod
     def update(cls, pk, **campos):
-        obj = cls._model.query.get(pk)
+        obj = cls.get_by_pk(pk)
         for key, value in campos.items():
             setattr(obj, key, value)
         db.session.commit()
@@ -58,7 +58,6 @@ class PagoService(BaseService):
     
     _model = Pago
     
-
 class GastoService(BaseService):
     
     _model = Gasto
