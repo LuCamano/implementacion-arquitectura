@@ -28,7 +28,6 @@ class BaseController:
     def filter_by(cls, **kwargs):
         return cls.model.filter_by(**kwargs)
     
-
 class EdificioController(BaseController):
     
     model = EdificioService
@@ -43,7 +42,7 @@ class PagoController(BaseController):
     
     @classmethod
     def get_by_gasto(cls, idGasto):
-        return cls.model.filter_by(idGasto=idGasto)
+        return cls.filter_by(idGasto=idGasto)
     
 class GastoController(BaseController):
     
@@ -51,11 +50,15 @@ class GastoController(BaseController):
     
     @classmethod
     def hacerPago(cls, idGasto, monto):
-        return GastoService(cls.model).hacer_pago(idGasto=idGasto, monto=monto)
+        return cls.model.hacer_pago(idGasto=idGasto, monto=monto)
     
     @classmethod
-    def get_by_departamento(cls, idDepartamento):
-        return GastoService(cls.model).get_by_departamento(idDepartamento)
+    def get_by_departamento(cls, idDepartamento, estado=None):
+        return cls.model.get_by_departamento(idDepartamento, estado)
+    
+    @classmethod
+    def generar_gastos_comunes(cls, idEdificio, periodo, valor):
+        return cls.model.generar_gastos_comunes(idEdificio=idEdificio, periodo=periodo, valor=valor)
     
 class ServicioController(BaseController):
     

@@ -42,11 +42,8 @@ class BaseService:
         return cls._model.query.filter_by(**kwargs).all()
 
 class DepartamentoService(BaseService):
-    _model = Departamento
     
-    @classmethod
-    def get_by_edificio(cls, idEdificio):
-        return cls.filter_by(idEdificio=idEdificio)
+    _model = Departamento
     
 
 class EdificioService(BaseService):
@@ -70,8 +67,11 @@ class GastoService(BaseService):
         return super().create(**campos)
     
     @classmethod
-    def get_by_departamento(cls, idDepartamento):
-        return cls.filter_by(idDepartamento=idDepartamento)
+    def get_by_departamento(cls, idDepartamento, estado=None):
+        if estado:
+            return cls.filter_by(idDepartamento=idDepartamento, estado=estado)
+        else:
+            return cls.filter_by(idDepartamento=idDepartamento)
     
     @classmethod
     def hacer_pago(cls, idGasto, monto):
@@ -83,11 +83,28 @@ class GastoService(BaseService):
         if por_pagar <= 0:
             raise Exception('El gasto ya fue pagado')
         if monto > por_pagar:
-            raise Exception('El monto a pagar excede lo que se debe')\
+            raise Exception('El monto a pagar excede lo que se debe')
+        
+        total_pagado += monto
+        por_pagar -= monto
         
         nuevoPago = PagoService.create(idGasto=idGasto, montoPagado=monto)
+        if total_pagado == gasto.valor:
+            gasto.estado = 'pagado'
         pagos.append(nuevoPago)
-        return gasto, pagos
+        return gasto, pagos, por_pagar, total_pagado
+    
+    @classmethod
+    def generar_gastos_comunes(cls, idEdificio, valor, periodo):
+        deptos = DepartamentoService.filter_by(idEdificio=idEdificio)
+        fecha = datetime.strptime(periodo, '%m-%Y')
+        gastos = []
+        for depto in deptos:
+            if depto.estado != 'Habitado':
+                continue
+            gasto = cls.create(valor=valor, tipo='comun', descripcion='Gasto común', estado='pendiente', fecha=fecha.strftime("%d-%m-%Y"), idDepartamento=depto.idDepartamento)
+            gastos.append(gasto)
+        return gastos
 
 class ServicioService(BaseService):
     
