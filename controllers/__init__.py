@@ -53,6 +53,10 @@ class GastoController(BaseController):
         return cls.model.hacer_pago(idGasto=idGasto, monto=monto)
     
     @classmethod
+    def filter_by_date(cls, year:int, mm:int=None, dd:int=None):
+        return cls.model.filter_by_date(dd, mm, year)
+
+    @classmethod
     def get_by_departamento(cls, idDepartamento, estado=None):
         return cls.model.get_by_departamento(idDepartamento, estado)
     

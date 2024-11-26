@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from sqlalchemy import extract
 from models import *
 from app import db
 
@@ -66,6 +68,18 @@ class GastoService(BaseService):
             campos['fecha'] = datetime.strptime(strFecha, '%d-%m-%Y')
         return super().create(**campos)
     
+    @classmethod
+    def filter_by_date(cls, year:int, mm:int=None, dd:int=None):
+        query = cls._model.query.filter(
+            extract('year', cls._model.fecha) == year
+        )
+        if mm is not None:
+            query = query.filter(extract('month', cls._model.fecha) == mm)
+        if dd is not None:
+            query = query.filter(extract('day', cls._model.fecha) == dd)
+        gastos = query.all()
+        return gastos
+
     @classmethod
     def get_by_departamento(cls, idDepartamento, estado=None):
         if estado:

@@ -122,7 +122,7 @@ class GastoView:
     @gasto_blueprint.route('/gasto/all', methods=['GET'])
     def get_all():
         # Obtener los parámetros de consulta
-        parametros = ['valor', 'tipo', 'descripcion', 'estado', 'fecha']
+        parametros = ['valor', 'tipo', 'descripcion', 'estado']
         # Crear un filtro vacío
         filtro = {}
         # Recorrer los parámetros de consulta
@@ -130,9 +130,6 @@ class GastoView:
             valor = request.args.get(c)
             if valor is not None:
                 filtro[c] = valor
-        # Obtener y procesar la fecha
-        if 'fecha' in filtro:
-            filtro['fecha'] = datetime.strptime(filtro['fecha'], '%d-%m-%Y')
         # Obtener los gastos
         if len(filtro) > 0:
             gastos = GastoController.filter_by(**filtro)
@@ -140,6 +137,27 @@ class GastoView:
             gastos = GastoController.get_all()
         return jsonify([gasto.serialize() for gasto in gastos])
     
+    @staticmethod
+    @gasto_blueprint.route('/gasto/periodo', methods=['GET'])
+    def filter_by_date():
+        # Obtener los parámetros de consulta
+        parametros = ['day','month','year']
+        # Crear un filtro vacío
+        campos = {}
+        # Recorrer los parámetros de consulta
+        for c in parametros:
+            valor = request.args.get(c)
+            if valor is not None:
+                campos[c] = valor
+        try:
+            if len(campos) > 0:
+                pass
+            else:
+                raise Exception("debe ingresar al menos un año para la consulta")
+        except Exception as e:
+            return jsonify(e)
+            
+
     @staticmethod
     @gasto_blueprint.route('/gasto/<int:idGasto>', methods=['GET'])
     def get_by_pk(idGasto):
