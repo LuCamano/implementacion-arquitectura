@@ -92,7 +92,7 @@ Este proyecto es una API para la gestión de pagos de gastos comunes en un edifi
         {
             "numero": 101,
             "piso": 1,
-            "estado": "Disponible",
+            "estado": "Desocupado",
             "idEdificio": 1
         }
         ```
@@ -162,10 +162,21 @@ Este proyecto es una API para la gestión de pagos de gastos comunes en un edifi
         - `tipo`: Filtrar por tipo de gasto
         - `descripcion`: Filtrar por descripción del gasto
         - `estado`: Filtrar por estado del gasto
-        - `fecha`: Filtrar por fecha del gasto (formato: `dd-mm-yyyy`)
     - **Ejemplo:**
         ```sh
         curl -X GET "http://127.0.0.1:5000/gasto/all?estado=pendiente"
+        ```
+
+- **Filtrar Gastos por Fecha**
+    - **Ruta:** `/gasto/periodo`
+    - **Método:** `GET`
+    - **Parámetros opcionales:**
+        - `year` (obligatorio): Año del gasto
+        - `mm`: Mes del gasto
+        - `dd`: Día del gasto
+    - **Ejemplo:**
+        ```sh
+        curl -X GET "http://127.0.0.1:5000/gasto/periodo?year=2023&mm=10"
         ```
 
 - **Obtener Gasto por PK**

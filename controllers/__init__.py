@@ -54,7 +54,7 @@ class GastoController(BaseController):
     
     @classmethod
     def filter_by_date(cls, year:int, mm:int=None, dd:int=None):
-        return cls.model.filter_by_date(dd, mm, year)
+        return cls.model.filter_by_date(year=year, mm=mm, dd=dd)
 
     @classmethod
     def get_by_departamento(cls, idDepartamento, estado=None):

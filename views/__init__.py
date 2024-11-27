@@ -129,7 +129,10 @@ class GastoView:
         for c in parametros:
             valor = request.args.get(c)
             if valor is not None:
-                filtro[c] = valor
+                if c == 'valor':
+                    filtro[c] = int(valor)
+                else: 
+                    filtro[c] = valor
         # Obtener los gastos
         if len(filtro) > 0:
             gastos = GastoController.filter_by(**filtro)
@@ -141,7 +144,7 @@ class GastoView:
     @gasto_blueprint.route('/gasto/periodo', methods=['GET'])
     def filter_by_date():
         # Obtener los parámetros de consulta
-        parametros = ['day','month','year']
+        parametros = ['year','mm','dd']
         # Crear un filtro vacío
         campos = {}
         # Recorrer los parámetros de consulta
@@ -151,12 +154,17 @@ class GastoView:
                 campos[c] = valor
         try:
             if len(campos) > 0:
-                pass
+                if 'year' in campos:
+                    for key, val in campos.items():
+                        campos[key] = int(val)
+                    gastos = GastoController.filter_by_date(**campos)
+                    return jsonify([gasto.serialize() for gasto in gastos])
+                else:
+                    raise Exception("debe ingresar al menos un año para la consulta")
             else:
                 raise Exception("debe ingresar al menos un año para la consulta")
         except Exception as e:
-            return jsonify(e)
-            
+            return jsonify({'error': str(e)})
 
     @staticmethod
     @gasto_blueprint.route('/gasto/<int:idGasto>', methods=['GET'])
