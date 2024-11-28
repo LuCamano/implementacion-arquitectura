@@ -55,11 +55,19 @@ Este proyecto es una API para la gestión de pagos de gastos comunes en un edifi
         ```
 
 - **Obtener Todos los Edificios**
-    - **Ruta:** `/edificio/get_all`
+    - **Ruta:** `/edificio/all`
     - **Método:** `GET`
+    - **Parámetros opcionales:**
+        - `nombre`: Filtrar por nombre del edificio
+        - `direccion`: Filtrar por dirección del edificio
+        - `numPisos`: Filtrar por número de pisos del edificio
+    - **Ejemplo:**
+        ```sh
+        curl -X GET "http://127.0.0.1:5000/edificio/all?nombre=Edificio1"
+        ```
 
 - **Obtener Edificio por ID**
-    - **Ruta:** `/edificio/get_by_pk/<int:idEdificio>`
+    - **Ruta:** `/edificio/<int:idEdificio>`
     - **Método:** `GET`
 
 - **Actualizar Edificio**
@@ -84,45 +92,50 @@ Este proyecto es una API para la gestión de pagos de gastos comunes en un edifi
         {
             "numero": 101,
             "piso": 1,
-            "estado": "Disponible",
+            "estado": "Desocupado",
             "idEdificio": 1
         }
         ```
 
 - **Obtener Todos los Departamentos**
-    - **Ruta:** `/departamento/get_all`
+    - **Ruta:** `/departamento/all`
     - **Método:** `GET`
+    - **Parámetros opcionales:**
+        - `numero`: Filtrar por número del departamento
+        - `piso`: Filtrar por piso del departamento
+        - `estado`: Filtrar por estado del departamento
+        - `idEdificio`: Filtrar por ID del edificio
+    - **Ejemplo:**
+        ```sh
+        curl -X GET "http://127.0.0.1:5000/departamento/all?estado=Desocupado"
+        ```
 
 - **Obtener Departamento por PK**
-    - **Ruta:** `/departamento/get_by_pk/<int:numero>/<int:idEdificio>`
+    - **Ruta:** `/departamento/<int:idDepartamento>`
     - **Método:** `GET`
 
 - **Actualizar Departamento**
-    - **Ruta:** `/departamento/update/<int:numero>/<int:idEdificio>`
+    - **Ruta:** `/departamento/update/<int:idDepartamento>`
     - **Método:** `PUT`
     - **Datos:**
         ```json
         {
-            "estado": "Ocupado"
+            "estado": "Habitado"
         }
         ```
 
 ### Pago
 
 - **Obtener Todos los Pagos**
-    - **Ruta:** `/pago/get_all`
+    - **Ruta:** `/pago/all`
     - **Método:** `GET`
 
 - **Obtener Pago por PK**
-    - **Ruta:** `/pago/get_by_pk/<int:idPago>`
+    - **Ruta:** `/pago/<int:idPago>`
     - **Método:** `GET`
 
 - **Obtener Pagos por Gasto**
-    - **Ruta:** `/pago/get_by_gasto/<int:idGasto>`
-    - **Método:** `GET`
-
-- **Obtener Pagos por Departamento**
-    - **Ruta:** `/pago/get_by_departamento/<int:numero>/<int:idEdificio>`
+    - **Ruta:** `/pago/by_gasto/<int:idGasto>`
     - **Método:** `GET`
 
 ### Gasto
@@ -142,11 +155,32 @@ Este proyecto es una API para la gestión de pagos de gastos comunes en un edifi
         ```
 
 - **Obtener Todos los Gastos**
-    - **Ruta:** `/gasto/get_all`
+    - **Ruta:** `/gasto/all`
     - **Método:** `GET`
+    - **Parámetros opcionales:**
+        - `valor`: Filtrar por valor del gasto
+        - `tipo`: Filtrar por tipo de gasto
+        - `descripcion`: Filtrar por descripción del gasto
+        - `estado`: Filtrar por estado del gasto
+    - **Ejemplo:**
+        ```sh
+        curl -X GET "http://127.0.0.1:5000/gasto/all?estado=pendiente"
+        ```
+
+- **Filtrar Gastos por Fecha**
+    - **Ruta:** `/gasto/periodo`
+    - **Método:** `GET`
+    - **Parámetros opcionales:**
+        - `year` (obligatorio): Año del gasto
+        - `mm`: Mes del gasto
+        - `dd`: Día del gasto
+    - **Ejemplo:**
+        ```sh
+        curl -X GET "http://127.0.0.1:5000/gasto/periodo?year=2023&mm=10"
+        ```
 
 - **Obtener Gasto por PK**
-    - **Ruta:** `/gasto/get_by_pk/<int:idGasto>`
+    - **Ruta:** `/gasto/<int:idGasto>`
     - **Método:** `GET`
 
 - **Actualizar Gasto**
@@ -155,19 +189,27 @@ Este proyecto es una API para la gestión de pagos de gastos comunes en un edifi
     - **Datos:**
         ```json
         {
-            "estado": "Pagado"
+            "estado": "pagado"
         }
         ```
 
 - **Hacer Pago de Gasto**
-    - **Ruta:** `/gasto/hacer_pago/<int:idGasto>`
+    - **Ruta:** `/gasto/hacer_pago/<int:idGasto>/<int:monto>`
+    - **Método:** `POST`
+
+- **Obtener Gastos por Departamento**
+    - **Ruta:** `/gasto/by_departamento/<int:idDepartamento>`
+    - **Método:** `GET`
+
+- **Generar Gastos Comunes**
+    - **Ruta:** `/gasto/generar_gastos_comunes`
     - **Método:** `POST`
     - **Datos:**
         ```json
         {
-            "numero": 101,
             "idEdificio": 1,
-            "monto": 5000
+            "valor": 5000,
+            "periodo": "10-2023"
         }
         ```
 
@@ -186,11 +228,11 @@ Este proyecto es una API para la gestión de pagos de gastos comunes en un edifi
         ```
 
 - **Obtener Todos los Servicios**
-    - **Ruta:** `/servicio/get_all`
+    - **Ruta:** `/servicio/all`
     - **Método:** `GET`
 
 - **Obtener Servicio por PK**
-    - **Ruta:** `/servicio/get_by_pk/<int:idServicio>`
+    - **Ruta:** `/servicio/<int:idServicio>`
     - **Método:** `GET`
 
 - **Actualizar Servicio**

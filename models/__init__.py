@@ -1,4 +1,5 @@
 from app import db
+from datetime import datetime
 
 class Empleado(db.Model):
     run = db.Column(db.String(12), primary_key=True)
@@ -67,6 +68,7 @@ class Departamento(db.Model):
 
     def serialize(self):
         return {
+            'idDepartamento': self.idDepartamento, 
             'numero': self.numero, 
             'piso': self.piso, 
             'estado': self.estado, 
@@ -88,9 +90,8 @@ class Solicitud(db.Model):
             'idSolicitud': self.idSolicitud, 
             'tipo': self.tipo, 
             'descripcion': self.descripcion, 
-            'fecha': self.fecha, 
-            'numero': self.numero, 
-            'idEdificio': self.idEdificio
+            'fecha': self.fecha,
+            'idDepartamento': self.idDepartamento
         }
     
     def __repr__(self):
@@ -111,7 +112,8 @@ class Gasto(db.Model):
             'tipo': self.tipo, 
             'descripcion': self.descripcion, 
             'estado': self.estado, 
-            'fecha': self.fecha
+            'fecha': self.fecha,
+            'idDepartamento': self.idDepartamento
         }
     
     def __repr__(self):
@@ -119,16 +121,14 @@ class Gasto(db.Model):
 class Pago(db.Model):
     idPago = db.Column(db.Integer, primary_key=True, autoincrement=True)
     idGasto = db.Column(db.Integer, db.ForeignKey('gasto.idGasto'), nullable=False)
-    idDepartamento = db.Column(db.Integer, db.ForeignKey('departamento.idDepartamento'), nullable=False)
     montoPagado = db.Column(db.Integer, nullable=False)
-    fechaPago = db.Column(db.Date, nullable=False)
+    fechaPago = db.Column(db.Date, nullable=False, default=datetime.now())
 
     def serialize(self):
         return {
-            'idGasto': self.idGasto, 
-            'numero': self.numero, 
-            'idEdificio': self.idEdificio, 
-            'montoPagado': self.montoPagado, 
+            'idPago': self.idPago,
+            'idGasto': self.idGasto,
+            'montoPagado': self.montoPagado,
             'fechaPago': self.fechaPago
         }
 
@@ -146,6 +146,7 @@ class Servicio(db.Model):
 class Persona(db.Model):
     run = db.Column(db.String(12), primary_key=True, nullable=False)
     nombre = db.Column(db.String(20), nullable=False)
+    apellido = db.Column(db.String(20), nullable=False)
     contacto = db.Column(db.Integer, nullable=False)
     conEmergencia = db.Column(db.Integer, nullable=False)
 
@@ -167,9 +168,9 @@ class Residente(db.Model):
 
     def serialize(self):
         return {
+            'idResidente': self.idResidente,
             'run': self.run, 
-            'numero': self.numero, 
-            'idEdificio': self.idEdificio, 
+            'idDepartamento': self.idDepartamento, 
             'inicio': self.inicio, 
             'termino': self.termino
         }
@@ -183,9 +184,9 @@ class Propietario(db.Model):
 
     def serialize(self):
         return {
+            'idPropietario': self.idPropietario,
             'run': self.run, 
-            'numero': self.numero, 
-            'idEdificio': self.idEdificio, 
+            'idDepartamento': self.idDepartamento, 
             'inicio': self.inicio, 
             'termino': self.termino
         }

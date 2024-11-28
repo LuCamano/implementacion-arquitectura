@@ -1,92 +1,70 @@
 from services import *
 
-class EdificioController:
-    @staticmethod
-    def create(**campos):
-        return EdificioService.create(**campos)
+class BaseController:
     
-    @staticmethod
-    def get_all():
-        return EdificioService.get_all()
+    model: BaseService = None
     
-    @staticmethod
-    def get_by_pk(idEdificio):
-        return EdificioService.get_by_pk(idEdificio)
+    @classmethod
+    def create(cls, **campos):
+        return cls.model.create(**campos)
     
-    @staticmethod
-    def update(idEdificio, **campos):
-        return EdificioService.update(idEdificio, **campos)
+    @classmethod
+    def get_all(cls):
+        return cls.model.get_all()
     
-class DepartamentoController:
-    @staticmethod
-    def create(**campos):
-        return DepartamentoService.create(**campos)
+    @classmethod
+    def get_by_pk(cls, pk):
+        return cls.model.get_by_pk(pk)
     
-    @staticmethod
-    def get_all():
-        return DepartamentoService.get_all()
+    @classmethod
+    def update(cls, pk, **campos):
+        return cls.model.update(pk, **campos)
     
-    @staticmethod
-    def get_by_pk(numero, idEdificio):
-        return DepartamentoService.get_by_pk(numero, idEdificio)
+    @classmethod
+    def delete(cls, pk):
+        return cls.model.delete(pk)
     
-    @staticmethod
-    def update(numero, idEdificio, **campos):
-        return DepartamentoService.update(numero, idEdificio, **campos)
+    @classmethod
+    def filter_by(cls, **kwargs):
+        return cls.model.filter_by(**kwargs)
     
-class PagoController:
-    @staticmethod
-    def create(idGasto, numero, idEdificio, montoPagado):
-        return PagoService.create(idGasto, numero, idEdificio, montoPagado)
+class EdificioController(BaseController):
     
-    @staticmethod
-    def get_all():
-        return PagoService.get_all()
+    model = EdificioService
     
-    @staticmethod
-    def get_by_pk(idGasto, numero, idEdificio):
-        return PagoService.get_by_pk(idGasto, numero, idEdificio)
+class DepartamentoController(BaseController):
     
-    @staticmethod
-    def get_by_gasto(idGasto):
-        return PagoService.get_by_gasto(idGasto)
+    model = DepartamentoService
     
-    @staticmethod
-    def get_by_departamento(numero, idEdificio):
-        return PagoService.get_by_departamento(numero, idEdificio)
-class GastoController:
-    @staticmethod
-    def create(**campos):
-        return GastoService.create(**campos)
+class PagoController(BaseController):
     
-    @staticmethod
-    def get_all():
-        return GastoService.get_all()
+    model = PagoService
     
-    @staticmethod
-    def get_by_pk(idGasto):
-        return GastoService.get_by_pk(idGasto)
+    @classmethod
+    def get_by_gasto(cls, idGasto):
+        return cls.filter_by(idGasto=idGasto)
     
-    @staticmethod
-    def update(idGasto, **campos):
-        return GastoService.update(idGasto, **campos)
+class GastoController(BaseController):
     
-    @staticmethod
-    def hacerPago(idGasto, numero, idEdificio, monto):
-        return GastoService.hacerPago(idGasto, numero, idEdificio, monto)
-class ServicioController:
-    @staticmethod
-    def create(**campos):
-        return ServicioService.create(**campos)
+    model = GastoService
     
-    @staticmethod
-    def get_all():
-        return ServicioService.get_all()
+    @classmethod
+    def hacerPago(cls, idGasto, monto):
+        return cls.model.hacer_pago(idGasto=idGasto, monto=monto)
     
-    @staticmethod
-    def get_by_pk(idServicio):
-        return ServicioService.get_by_pk(idServicio)
+    @classmethod
+    def filter_by_date(cls, year:int, mm:int=None, dd:int=None):
+        return cls.model.filter_by_date(year=year, mm=mm, dd=dd)
+
+    @classmethod
+    def get_by_departamento(cls, idDepartamento, estado=None):
+        return cls.model.get_by_departamento(idDepartamento, estado)
     
-    @staticmethod
-    def update(nombre, **campos):
-        return ServicioService.update(nombre, **campos)
+    @classmethod
+    def generar_gastos_comunes(cls, idEdificio, periodo, valor):
+        return cls.model.generar_gastos_comunes(idEdificio=idEdificio, periodo=periodo, valor=valor)
+    
+class ServicioController(BaseController):
+    
+    model = ServicioService
+    
