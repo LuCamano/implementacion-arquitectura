@@ -1,7 +1,9 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 class SingletonDB:
     _instance = None
@@ -15,6 +17,7 @@ class SingletonDB:
     def init_app(self, app):
         if app is not None:
             db.init_app(app)
+            migrate.init_app(app, db)
 
 def create_app():
     app = Flask(__name__)
