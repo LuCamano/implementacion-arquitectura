@@ -150,7 +150,8 @@ Este proyecto es una API para la gestión de pagos de gastos comunes en un edifi
             "tipo": "Mantenimiento",
             "descripcion": "Reparación de ascensor",
             "estado": "Pendiente",
-            "fecha": "01-10-2023"
+            "fecha": "01-10-2023",
+            "idDepartamento": 1
         }
         ```
 
