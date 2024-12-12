@@ -133,7 +133,8 @@ class Pago(db.Model):
         }
 
 class Servicio(db.Model):
-    nombre = db.Column(db.String(25), primary_key=True, nullable=False)
+    idServicio = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    nombre = db.Column(db.String(25), nullable=False, unique=True)
     descripcion = db.Column(db.String(50), nullable=False)
     idGasto = db.Column(db.Integer, db.ForeignKey('gasto.idGasto'), nullable=False)
 
