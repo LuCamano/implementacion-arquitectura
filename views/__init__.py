@@ -6,6 +6,11 @@ departamento_blueprint = Blueprint('departamento', __name__)
 pago_blueprint = Blueprint('pago', __name__)
 gasto_blueprint = Blueprint('gasto', __name__)
 servicio_blueprint = Blueprint('servicio', __name__)
+persona_blueprint = Blueprint('persona', __name__)
+residente_blueprint = Blueprint('residente', __name__)
+propietario_blueprint = Blueprint('propietario', __name__)
+empleado_blueprint = Blueprint('empleado', __name__)
+empleado_edificio_blueprint = Blueprint('empleado_edificio', __name__)
 
 class EdificioView:
     
@@ -231,3 +236,329 @@ class ServicioView:
         data = request.get_json()
         servicio = ServicioController.update(idServicio, **data)
         return jsonify(servicio.serialize())
+    
+class PersonaView:
+
+    @staticmethod
+    @persona_blueprint.route('/persona/create', methods=['POST'])
+    def create():
+        try:
+            data = request.get_json()
+            persona = PersonaController.create(**data)
+            return jsonify(persona.serialize())
+        except Exception as e:
+            return jsonify({'error': str(e)})
+        
+    @staticmethod
+    @persona_blueprint.route('/persona/all', methods=['GET'])
+    def get_all():
+        # Obtener los parámetros de consulta
+        parametros = ['nombre', 'apellido', 'contacto', 'conEmergencia']
+        # Crear un filtro vacío
+        filtro = {}
+        # Recorrer los parámetros de consulta
+        for c in parametros:
+            valor = request.args.get(c)
+            if valor is not None:
+                filtro[c] = valor
+        # Obtener los departamentos
+        if len(filtro) > 0:
+            personas = PersonaController.filter_by(**filtro)
+        else:
+            personas = PersonaController.get_all()
+        return jsonify([persona.serialize() for persona in personas])
+    
+    @staticmethod
+    @persona_blueprint.route('/persona/<string:run>', methods=['GET'])
+    def get_by_pk(run):
+        persona = PersonaController.get_by_pk(run)
+        return jsonify(persona.serialize())
+    
+    @staticmethod
+    @persona_blueprint.route('/persona/update/<string:run>', methods=['PUT'])
+    def update(run):
+        try:
+            data = request.get_json()
+            persona = PersonaController.update(run, **data)
+            return jsonify(persona.serialize())
+        except Exception as e:
+            return jsonify({'error': str(e)})
+    
+class ResidenteView:
+    
+    @staticmethod
+    @residente_blueprint.route('/residente/create', methods=['POST'])
+    def create():
+        try:
+            data = request.get_json()
+            residente = ResidenteController.create(**data)
+            return jsonify(residente.serialize())
+        except Exception as e:
+            return jsonify({'error': str(e)})
+        
+    @staticmethod
+    @residente_blueprint.route('/residente/all', methods=['GET'])
+    def get_all():
+        # Obtener los parámetros de consulta
+        parametros = ['run', 'idDepartamento']
+        # Crear un filtro vacío
+        filtro = {}
+        # Recorrer los parámetros de consulta
+        for c in parametros:
+            valor = request.args.get(c)
+            if valor is not None:
+                filtro[c] = valor
+        # Obtener los departamentos
+        if len(filtro) > 0:
+            residentes = ResidenteController.filter_by(**filtro)
+        else:
+            residentes = ResidenteController.get_all()
+        return jsonify([residente.serialize() for residente in residentes])
+    
+    @staticmethod
+    @residente_blueprint.route('/residente/<int:idResidente>', methods=['GET'])
+    def get_by_pk(idResidente):
+        residente = ResidenteController.get_by_pk(idResidente)
+        return jsonify(residente.serialize())
+    
+    @staticmethod
+    @residente_blueprint.route('/residente/update/<int:idResidente>', methods=['PUT'])
+    def update(idResidente):
+        try:
+            data = request.get_json()
+            residente = ResidenteController.update(idResidente, **data)
+            return jsonify(residente.serialize())
+        except Exception as e:
+            return jsonify({'error': str(e)})
+        
+    @staticmethod
+    @residente_blueprint.route('/residente/inicio', methods=['GET'])
+    def filter_by_inicio():
+        # Obtener los parámetros de consulta
+        parametros = ['year','mm','dd']
+        # Crear un filtro vacío
+        campos = {}
+        # Recorrer los parámetros de consulta
+        for c in parametros:
+            valor = request.args.get(c)
+            if valor is not None:
+                campos[c] = valor
+        try:
+            if len(campos) > 0:
+                if 'year' in campos:
+                    for key, val in campos.items():
+                        campos[key] = int(val)
+                    residentes = ResidenteController.filter_by_date(**campos)
+                    return jsonify([residente.serialize() for residente in residentes])
+                else:
+                    raise Exception("debe ingresar al menos un año para la consulta")
+            else:
+                raise Exception("debe ingresar al menos un año para la consulta")
+        except Exception as e:
+            return jsonify({'error': str(e)})
+    
+    @staticmethod
+    @residente_blueprint.route('/residente/termino', methods=['GET'])
+    def filter_by_termino():
+        # Obtener los parámetros de consulta
+        parametros = ['year','mm','dd']
+        # Crear un filtro vacío
+        campos = {}
+        # Recorrer los parámetros de consulta
+        for c in parametros:
+            valor = request.args.get(c)
+            if valor is not None:
+                campos[c] = valor
+        try:
+            if len(campos) > 0:
+                if 'year' in campos:
+                    for key, val in campos.items():
+                        campos[key] = int(val)
+                    residentes = ResidenteController.filter_by_date(**campos)
+                    return jsonify([residente.serialize() for residente in residentes])
+                else:
+                    raise Exception("debe ingresar al menos un año para la consulta")
+            else:
+                raise Exception("debe ingresar al menos un año para la consulta")
+        except Exception as e:
+            return jsonify({'error': str(e)})
+
+class PropietarioView:
+
+    @staticmethod
+    @propietario_blueprint.route('/propietario/create', methods=['POST'])
+    def create():
+        try:
+            data = request.get_json()
+            propietario = PropietarioController.create(**data)
+            return jsonify(propietario.serialize())
+        except Exception as e:
+            return jsonify({'error': str(e)})
+    
+    @staticmethod
+    @propietario_blueprint.route('/propietario/all', methods=['GET'])
+    def get_all():
+        # Obtener los parámetros de consulta
+        parametros = ['run', 'idDepartamento']
+        # Crear un filtro vacío
+        filtro = {}
+        # Recorrer los parámetros de consulta
+        for c in parametros:
+            valor = request.args.get(c)
+            if valor is not None:
+                filtro[c] = valor
+        # Obtener los departamentos
+        if len(filtro) > 0:
+            propietarios = PropietarioController.filter_by(**filtro)
+        else:
+            propietarios = PropietarioController.get_all()
+        return jsonify([propietario.serialize() for propietario in propietarios])
+    
+class EmpleadoView:
+
+    @staticmethod
+    @empleado_blueprint.route('/empleado/create', methods=['POST'])
+    def create():
+        try:
+            data = request.get_json()
+            empleado = EmpleadoController.create(**data)
+            return jsonify(empleado.serialize())
+        except Exception as e:
+            return jsonify({'error': str(e)})
+    
+    @staticmethod
+    @empleado_blueprint.route('/empleado/all', methods=['GET'])
+    def get_all():
+        # Obtener los parámetros de consulta
+        parametros = ['nombre', 'sueldoHora', 'horas', 'contacto', 'conEmergencia', 'tipo']
+        # Crear un filtro vacío
+        filtro = {}
+        # Recorrer los parámetros de consulta
+        for c in parametros:
+            valor = request.args.get(c)
+            if valor is not None:
+                filtro[c] = valor
+        # Obtener los departamentos
+        if len(filtro) > 0:
+            empleados = EmpleadoController.filter_by(**filtro)
+        else:
+            empleados = EmpleadoController.get_all()
+        return jsonify([empleado.serialize() for empleado in empleados])
+    
+    @staticmethod
+    @empleado_blueprint.route('/empleado/<string:run>', methods=['GET'])
+    def get_by_pk(run):
+        empleado = EmpleadoController.get_by_pk(run)
+        return jsonify(empleado.serialize())
+    
+    @staticmethod
+    @empleado_blueprint.route('/empleado/update/<string:run>', methods=['PUT'])
+    def update(run):
+        try:
+            data = request.get_json()
+            empleado = EmpleadoController.update(run, **data)
+            return jsonify(empleado.serialize())
+        except Exception as e:
+            return jsonify({'error': str(e)})
+    
+class EmpleadoEdificioView:
+
+    @staticmethod
+    @empleado_edificio_blueprint.route('/empleado-edificio/create', methods=['POST'])
+    def create():
+        try:
+            data = request.get_json()
+            empleado_edificio = EmpleadoEdificioController.create(**data)
+            return jsonify(empleado_edificio.serialize())
+        except Exception as e:
+            return jsonify({'error': str(e)})
+    
+    @staticmethod
+    @empleado_edificio_blueprint.route('/empleado-edificio/all', methods=['GET'])
+    def get_all():
+        # Obtener los parámetros de consulta
+        parametros = ['run', 'idEdificio']
+        # Crear un filtro vacío
+        filtro = {}
+        # Recorrer los parámetros de consulta
+        for c in parametros:
+            valor = request.args.get(c)
+            if valor is not None:
+                filtro[c] = valor
+        # Obtener los departamentos
+        if len(filtro) > 0:
+            empleados_edificio = EmpleadoEdificioController.filter_by(**filtro)
+        else:
+            empleados_edificio = EmpleadoEdificioController.get_all()
+        return jsonify([empleado_edificio.serialize() for empleado_edificio in empleados_edificio])
+    
+    @staticmethod
+    @empleado_edificio_blueprint.route('/empleado-edificio/<int:idEmpleadoEdificio>', methods=['GET'])
+    def get_by_pk(idEmpleadoEdificio):
+        try:
+            empleado_edificio = EmpleadoEdificioController.get_by_pk(idEmpleadoEdificio)
+            return jsonify(empleado_edificio.serialize())
+        except Exception as e:
+            return jsonify({'error': str(e)})
+        
+    @staticmethod
+    @empleado_edificio_blueprint.route('/empleado-edificio/update/<int:idEmpleadoEdificio>', methods=['PUT'])
+    def update(idEmpleadoEdificio):
+        try:
+            data = request.get_json()
+            empleado_edificio = EmpleadoEdificioController.update(idEmpleadoEdificio, **data)
+            return jsonify(empleado_edificio.serialize())
+        except Exception as e:
+            return jsonify({'error': str(e)})
+    
+    @staticmethod
+    @empleado_edificio_blueprint.route('/empleado-edificio/termino', methods=['GET'])
+    def filter_by_termino():
+        # Obtener los parámetros de consulta
+        parametros = ['year','mm','dd']
+        # Crear un filtro vacío
+        campos = {}
+        # Recorrer los parámetros de consulta
+        for c in parametros:
+            valor = request.args.get(c)
+            if valor is not None:
+                campos[c] = valor
+        try:
+            if len(campos) > 0:
+                if 'year' in campos:
+                    for key, val in campos.items():
+                        campos[key] = int(val)
+                    empleados_edificio = EmpleadoEdificioController.filter_by_termino(**campos)
+                    return jsonify([empleado_edificio.serialize() for empleado_edificio in empleados_edificio])
+                else:
+                    raise Exception("debe ingresar al menos un año para la consulta")
+            else:
+                raise Exception("debe ingresar al menos un año para la consulta")
+        except Exception as e:
+            return jsonify({'error': str(e)})
+    
+    @staticmethod
+    @empleado_edificio_blueprint.route('/empleado-edificio/inicio', methods=['GET'])
+    def filter_by_inicio():
+        # Obtener los parámetros de consulta
+        parametros = ['year','mm','dd']
+        # Crear un filtro vacío
+        campos = {}
+        # Recorrer los parámetros de consulta
+        for c in parametros:
+            valor = request.args.get(c)
+            if valor is not None:
+                campos[c] = valor
+        try:
+            if len(campos) > 0:
+                if 'year' in campos:
+                    for key, val in campos.items():
+                        campos[key] = int(val)
+                    empleados_edificio = EmpleadoEdificioController.filter_by_inicio(**campos)
+                    return jsonify([empleado_edificio.serialize() for empleado_edificio in empleados_edificio])
+                else:
+                    raise Exception("debe ingresar al menos un año para la consulta")
+            else:
+                raise Exception("debe ingresar al menos un año para la consulta")
+        except Exception as e:
+            return jsonify({'error': str(e)})

@@ -123,3 +123,95 @@ class GastoService(BaseService):
 class ServicioService(BaseService):
     
     _model = Servicio
+
+class PersonaService(BaseService):
+
+    _model = Persona
+
+class ResidenteService(BaseService):
+
+    _model = Residente
+
+    @classmethod
+    def filter_by_inicio(cls, year:int, mm:int=None, dd:int=None):
+        query = cls._model.query.filter(
+            extract('year', cls._model.inicio) == year
+        )
+        if mm is not None:
+            query = query.filter(extract('month', cls._model.inicio) == mm)
+        if dd is not None:
+            query = query.filter(extract('day', cls._model.inicio) == dd)
+        residentes = query.all()
+        return residentes
+    
+    @classmethod
+    def filter_by_termino(cls, year:int, mm:int=None, dd:int=None):
+        query = cls._model.query.filter(
+            extract('year', cls._model.termino) == year
+        )
+        if mm is not None:
+            query = query.filter(extract('month', cls._model.termino) == mm)
+        if dd is not None:
+            query = query.filter(extract('day', cls._model.termino) == dd)
+        residentes = query.all()
+        return residentes
+    
+class PropietarioService(BaseService):
+
+    _model = Propietario
+
+    @classmethod
+    def filter_by_inicio(cls, year:int, mm:int=None, dd:int=None):
+        query = cls._model.query.filter(
+            extract('year', cls._model.inicio) == year
+        )
+        if mm is not None:
+            query = query.filter(extract('month', cls._model.inicio) == mm)
+        if dd is not None:
+            query = query.filter(extract('day', cls._model.inicio) == dd)
+        propietarios = query.all()
+        return propietarios
+    
+    @classmethod
+    def filter_by_termino(cls, year:int, mm:int=None, dd:int=None):
+        query = cls._model.query.filter(
+            extract('year', cls._model.termino) == year
+        )
+        if mm is not None:
+            query = query.filter(extract('month', cls._model.termino) == mm)
+        if dd is not None:
+            query = query.filter(extract('day', cls._model.termino) == dd)
+        propietarios = query.all()
+        return propietarios
+
+class EmpleadoService(BaseService):
+
+    _model = Empleado
+
+class EmpleadoEdificioService(BaseService):
+
+    _model = EmpleadoEdificio
+
+    @classmethod
+    def filter_by_inicio(cls, year:int, mm:int=None, dd:int=None):
+        query = cls._model.query.filter(
+            extract('year', cls._model.inicio) == year
+        )
+        if mm is not None:
+            query = query.filter(extract('month', cls._model.inicio) == mm)
+        if dd is not None:
+            query = query.filter(extract('day', cls._model.inicio) == dd)
+        empleados = query.all()
+        return empleados
+    
+    @classmethod
+    def filter_by_termino(cls, year:int, mm:int=None, dd:int=None):
+        query = cls._model.query.filter(
+            extract('year', cls._model.termino) == year
+        )
+        if mm is not None:
+            query = query.filter(extract('month', cls._model.termino) == mm)
+        if dd is not None:
+            query = query.filter(extract('day', cls._model.termino) == dd)
+        empleados = query.all()
+        return empleados

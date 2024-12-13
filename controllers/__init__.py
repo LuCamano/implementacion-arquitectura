@@ -68,3 +68,47 @@ class ServicioController(BaseController):
     
     model = ServicioService
     
+
+class PersonaController(BaseController):
+
+    model = PersonaService
+
+class PropietarioController(BaseController):
+
+    model = PropietarioService
+
+    @classmethod
+    def filter_by_inicio(cls, year:int, mm:int=None, dd:int=None):
+        return cls.model.filter_by_inicio(year=year, mm=mm, dd=dd)
+    
+    @classmethod
+    def filter_by_termino(cls, year:int, mm:int=None, dd:int=None):
+        return cls.model.filter_by_termino(year=year, mm=mm, dd=dd)
+
+class ResidenteController(BaseController):
+
+    model = ResidenteService
+
+    @classmethod
+    def filter_by_inicio(cls, year:int, mm:int=None, dd:int=None):
+        return cls.model.filter_by_inicio(year=year, mm=mm, dd=dd)
+    
+    @classmethod
+    def filter_by_termino(cls, year:int, mm:int=None, dd:int=None):
+        return cls.model.filter_by_termino(year=year, mm=mm, dd=dd)
+
+class EmpleadoController(BaseController):
+
+    model = EmpleadoService
+
+class EmpleadoEdificioController(BaseController):
+
+    model = EmpleadoEdificioService
+
+    @classmethod
+    def filter_by_inicio(cls, year:int, mm:int=None, dd:int=None):
+        return cls.model.filter_by_inicio(year=year, mm=mm, dd=dd)
+    
+    @classmethod
+    def filter_by_termino(cls, year:int, mm:int=None, dd:int=None):
+        return cls.model.filter_by_termino(year=year, mm=mm, dd=dd)
